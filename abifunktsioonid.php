@@ -1,5 +1,5 @@
 <?php
-require ('conf.php');
+require('SRVconf.php');
 function kysiKaupadeAndmed($sorttulp="nimetus", $otsisona=''){
     global $yhendus;
     $lubatudtulbad=array("nimetus", "grupinimi", "hind");
