@@ -1,8 +1,10 @@
 <?php
 require("abifunktsioonid.php");
+require("SRVconf.php");
 session_start();
-if (!isset($_SESSION['admin'])) {
-    $_SESSION['admin'] = false;
+if (!isset($_SESSION['kasutaja'])) {
+    header('Location: login2.php');
+    exit();
 }
 // Добавление новой группы
 if (isset($_POST["grupilisamine"]) && !empty(trim($_POST["uuegrupinimi"]))) {
@@ -19,13 +21,13 @@ if (isset($_POST["kaubalisamine"]) && !empty($_POST["nimetus"])) {
 }
 
 // Удаление товара
-if (isset($_GET["kustutusid"])) {
+if (isset($_GET["kustutusid"]) && !isAdmin()) {
     kustutaKaup($_GET["kustutusid"]);
     header("Location: kaubaHaldus.php");
     exit();
 }
 
-// Изменение товара
+// Изменение товараx
 if (isset($_POST["muutmine"])) {
     muudaKaup($_POST["muudetudid"], $_POST["nimetus"], $_POST["kaubagrupi_id"], $_POST["hind"]);
     header("Location: kaubaHaldus.php");

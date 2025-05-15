@@ -18,11 +18,13 @@ if (!empty($_POST['login']) && !empty($_POST['pass'])) {
     $paring->bind_result($kasutaja, $parool, $onadmin);
     $paring->execute();
 
-    if($paring->fetch() && $parool == $krypt) {
+    if ($paring->fetch() && $parool == $krypt) {
         $_SESSION['kasutaja'] = $login;
-        if($onadmin==1) {
-            $_SESSION['admin'] = true;
-        }
+        //заменила if ($onadmin == 1) на то что ниже
+        $_SESSION['admin'] = ($onadmin == 1);
+        //if ($onadmin == 1) {
+        //$_SESSION['admin'] = true;
+        //}
         $paring->close();
         $yhendus->close();
         header('Location: kaubaHaldus.php');
@@ -36,6 +38,7 @@ if (!empty($_POST['login']) && !empty($_POST['pass'])) {
 
 
 ?>
+<link rel="stylesheet" href="style.css">
 <h1>Login</h1>
 <form action="" method="post">
     <table>
@@ -62,3 +65,5 @@ if (!empty($_POST['login']) && !empty($_POST['pass'])) {
         </tr>
     </table>
 </form>
+<h2>Registrerimine</h2>
+<a href="singin.php">Registrerimine</a>

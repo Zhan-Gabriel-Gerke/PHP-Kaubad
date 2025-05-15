@@ -1,5 +1,6 @@
 <?php
 require("abifunktsioonid.php");
+require("SRVconf.php");
 $sorttulp="nimetus";
 $otsisona="";
 if(isSet($_REQUEST["sort"])){
