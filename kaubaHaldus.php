@@ -1,7 +1,7 @@
 <?php
-require("abifunktsioonid.php");
-require("SRVconf.php");
 session_start();
+require("SRVconf.php");
+require("abifunktsioonid.php");
 if (!isset($_SESSION['kasutaja'])) {
     header('Location: login2.php');
     exit();
@@ -28,7 +28,7 @@ if (isset($_GET["kustutusid"]) && !isAdmin()) {
 }
 
 // Изменение товараx
-if (isset($_POST["muutmine"])) {
+if (isset($_POST["muutmine"]) && !isAdmin()) {
     muudaKaup($_POST["muudetudid"], $_POST["nimetus"], $_POST["kaubagrupi_id"], $_POST["hind"]);
     header("Location: kaubaHaldus.php");
     exit();
@@ -58,31 +58,31 @@ function isAdmin(){
     <?php
     if(!isAdmin()){
         ?>
-    <!-- Форма добавления товара -->
-    <form action="kaubaHaldus.php" method="post">
-        <h2>Kauba lisamine</h2>
-        <dl>
-            <dt>Nimetus:</dt>
-            <dd><input type="text" name="nimetus" required /></dd>
-            <dt>Kaubagrupp:</dt>
-            <dd>
-                <?php echo looRippMenyy("SELECT id, grupinimi FROM kaubagrupid", "kaubagrupi_id"); ?>
-            </dd>
-            <dt>Hind:</dt>
-            <dd><input type="number" name="hind" step="0.01" required /></dd>
-        </dl>
-        <input type="submit" name="kaubalisamine" value="Lisa kaup" />
-    </form>
+        <!-- Форма добавления товара -->
+        <form action="kaubaHaldus.php" method="post">
+            <h2>Kauba lisamine</h2>
+            <dl>
+                <dt>Nimetus:</dt>
+                <dd><input type="text" name="nimetus" required /></dd>
+                <dt>Kaubagrupp:</dt>
+                <dd>
+                    <?php echo looRippMenyy("SELECT id, grupinimi FROM kaubagrupid", "kaubagrupi_id"); ?>
+                </dd>
+                <dt>Hind:</dt>
+                <dd><input type="number" name="hind" step="0.01" required /></dd>
+            </dl>
+            <input type="submit" name="kaubalisamine" value="Lisa kaup" />
+        </form>
 
-    <!-- Форма добавления группы -->
-    <form action="kaubaHaldus.php" method="post">
-        <h2>Grupi lisamine</h2>
-        <input type="text" name="uuegrupinimi" required />
-        <input type="submit" name="grupilisamine" value="Lisa grupp" />
-    </form>
+        <!-- Форма добавления группы -->
+        <form action="kaubaHaldus.php" method="post">
+            <h2>Grupi lisamine</h2>
+            <input type="text" name="uuegrupinimi" required />
+            <input type="submit" name="grupilisamine" value="Lisa grupp" />
+        </form>
         <?php
-        }
-        ?>
+    }
+    ?>
     <!-- Таблица товаров -->
     <h2>Kaupade loetelu</h2>
     <table>
@@ -102,11 +102,21 @@ function isAdmin(){
                             <a href="kaubaHaldus.php">Katkesta</a>
                             <input type="hidden" name="muudetudid" value="<?= $kaup->id ?>" />
                         </td>
-                        <td><input type="text" name="nimetus" value="<?= htmlspecialchars($kaup->nimetus) ?>" required /></td>
                         <td>
-                            <?php echo looRippMenyy("SELECT id, grupinimi FROM kaubagrupid", "kaubagrupi_id", $kaup->kaubagrupi_id); ?>
+                            <input type="text" name="nimetus" value="<?= htmlspecialchars($kaup->nimetus) ?>" required />
                         </td>
-                        <td><input type="number" name="hind" value="<?= $kaup->hind ?>" step="0.01" required /></td>
+                        <td>
+                            <?php
+                            echo looRippMenyy(
+                                "SELECT id, grupinimi FROM kaubagrupid",
+                                "kaubagrupi_id"
+                                //$kaup->kaubagrupi_id
+                            );
+                            ?>
+                        </td>
+                        <td>
+                            <input type="number" name="hind" value="<?= $kaup->hind ?>" step="0.01" required />
+                        </td>
                     </form>
                 <?php else: ?>
                     <td>
@@ -120,6 +130,7 @@ function isAdmin(){
                 <?php endif; ?>
             </tr>
         <?php endforeach; ?>
+
     </table>
 
 <?php endif; ?>

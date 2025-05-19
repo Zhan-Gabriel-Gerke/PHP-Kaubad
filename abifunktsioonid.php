@@ -69,9 +69,13 @@ function looRippMenyy($sqllause, $valikunimi){
     return $tulemus;
 }
 ?>
+<?php
+/*
 <!--valjastab koik andmetabeli andmed massivina
 <pre>
 <?php
-print_r(kysiKaupadeAndmed());
+//print_r(kysiKaupadeAndmed());
 ?>
 </pre>-->
+*/
+?>
