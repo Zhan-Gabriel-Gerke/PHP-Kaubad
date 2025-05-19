@@ -2,10 +2,16 @@
 session_start();
 require("SRVconf.php");
 require("abifunktsioonid.php");
+
 if (!isset($_SESSION['kasutaja'])) {
     header('Location: login2.php');
     exit();
 }
+
+function isAdmin() {
+    return isset($_SESSION['admin']) && $_SESSION['admin'];
+}
+
 // Добавление новой группы
 if (isset($_POST["grupilisamine"]) && !empty(trim($_POST["uuegrupinimi"]))) {
     lisaGrupp($_POST["uuegrupinimi"]);
@@ -20,24 +26,22 @@ if (isset($_POST["kaubalisamine"]) && !empty($_POST["nimetus"])) {
     exit();
 }
 
-// Удаление товара
-if (isset($_GET["kustutusid"]) && !isAdmin()) {
+// Удаление товара — только для админа
+if (isset($_GET["kustutusid"]) && isAdmin()) {
     kustutaKaup($_GET["kustutusid"]);
     header("Location: kaubaHaldus.php");
     exit();
 }
 
-// Изменение товараx
-if (isset($_POST["muutmine"]) && !isAdmin()) {
+// Изменение товара — только для админа
+if (isset($_POST["muutmine"]) && isAdmin()) {
     muudaKaup($_POST["muudetudid"], $_POST["nimetus"], $_POST["kaubagrupi_id"], $_POST["hind"]);
     header("Location: kaubaHaldus.php");
     exit();
 }
 
 $kaubad = kysiKaupadeAndmed();
-function isAdmin(){
-    return isset($_SESSION['admin']) && $_SESSION['admin'];
-}
+
 ?>
 
 <!DOCTYPE html>
@@ -55,9 +59,8 @@ function isAdmin(){
     </form>
 
     <h1>Kaubad | Kaubagrupid</h1>
-    <?php
-    if(!isAdmin()){
-        ?>
+
+    <?php if (isAdmin()): ?>
         <!-- Форма добавления товара -->
         <form action="kaubaHaldus.php" method="post">
             <h2>Kauba lisamine</h2>
@@ -80,9 +83,8 @@ function isAdmin(){
             <input type="text" name="uuegrupinimi" required />
             <input type="submit" name="grupilisamine" value="Lisa grupp" />
         </form>
-        <?php
-    }
-    ?>
+    <?php endif; ?>
+
     <!-- Таблица товаров -->
     <h2>Kaupade loetelu</h2>
     <table>
@@ -109,8 +111,8 @@ function isAdmin(){
                             <?php
                             echo looRippMenyy(
                                 "SELECT id, grupinimi FROM kaubagrupid",
-                                "kaubagrupi_id"
-                                //$kaup->kaubagrupi_id
+                                "kaubagrupi_id",
+                                $kaup->kaubagrupi_id ?? null
                             );
                             ?>
                         </td>
@@ -119,11 +121,15 @@ function isAdmin(){
                         </td>
                     </form>
                 <?php else: ?>
-                    <td>
-                        <a href="kaubaHaldus.php?kustutusid=<?= $kaup->id ?>"
-                           onclick="return confirm('Kas ikka soovid kustutada?')">x</a>
-                        <a href="kaubaHaldus.php?muutmisid=<?= $kaup->id ?>">m</a>
-                    </td>
+                    <?php if (isAdmin()): ?>
+                        <td>
+                            <a href="kaubaHaldus.php?kustutusid=<?= $kaup->id ?>"
+                               onclick="return confirm('Kas ikka soovid kustutada?')">x</a>
+                            <a href="kaubaHaldus.php?muutmisid=<?= $kaup->id ?>">m</a>
+                        </td>
+                    <?php else: ?>
+                        <td></td>
+                    <?php endif; ?>
                     <td><?= htmlspecialchars($kaup->nimetus) ?></td>
                     <td><?= htmlspecialchars($kaup->grupinimi) ?></td>
                     <td><?= $kaup->hind ?></td>
