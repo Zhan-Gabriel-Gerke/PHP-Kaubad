@@ -24,11 +24,11 @@ function lisaBroneering($nimi, $laud_id, $kuupaev, $kellaaeg, $inimeste_arv) {
 
 function kysiBroneeringud() {
     global $yhendus;
-    $stmt = $yhendus->prepare("SELECT b.*, l.istekohtade_arv FROM broneering b JOIN laud l ON b.laud_id = l.laud_id ORDER BY b.kuupaev, b.kellaaeg");
-    $stmt->execute();
-    $result = $stmt->get_result();
-    return $result->fetch_all(MYSQLI_ASSOC);
+    $kask = "SELECT broneering_id, kliendi_nimi, laud_id, kuupaev, kellaaeg, inimiste_arv FROM broneering";
+    $tulemus = $yhendus->query($kask);
+    return $tulemus->fetch_all(MYSQLI_ASSOC);
 }
+
 
 function kustutaBroneering($id) {
     global $yhendus;
@@ -49,5 +49,19 @@ function looLaudRippMenyy($sql, $name) {
     $html .= "</select>";
     return $html;
 }
+function looRippMenyy($sql, $name) {
+    global $yhendus;
+    $stmt = $yhendus->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
+    $html = "<select name='$name' required>";
+    while ($row = $result->fetch_assoc()) {
+        $html .= "<option value='" . $row[array_keys($row)[0]] . "'>" . $row[array_keys($row)[1]] . "</option>";
+    }
+    $html .= "</select>";
+
+    $stmt->close();
+    return $html;
+}
 ?>

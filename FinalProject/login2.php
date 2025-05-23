@@ -7,8 +7,7 @@ if (!empty($_POST['login']) && !empty($_POST['pass'])) {
     $pass = trim($_POST['pass']);
 
     global $yhendus;
-
-    $paring = $yhendus->prepare("SELECT kasutaja, parool, onadmin FROM kasutajad WHERE kasutaja=?");
+    $paring = $yhendus->prepare("SELECT kasutaja, parool, onadmin FROM kasutaja WHERE kasutaja=?");
     $paring->bind_param('s', $login);
     $paring->execute();
     $paring->bind_result($kasutaja, $parool, $onadmin);
@@ -28,7 +27,7 @@ if (!empty($_POST['login']) && !empty($_POST['pass'])) {
     $yhendus->close();
 }
 ?>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style/login.css">
 <h1>Login</h1>
 <form action="" method="post">
     <table>
@@ -46,5 +45,3 @@ if (!empty($_POST['login']) && !empty($_POST['pass'])) {
         </tr>
     </table>
 </form>
-<h2>Registreerimine</h2>
-<a href="singin.php">Registreeri</a>
