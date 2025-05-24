@@ -27,7 +27,9 @@ if (!empty($_POST['login']) && !empty($_POST['pass'])) {
     $yhendus->close();
 }
 ?>
-<link rel="stylesheet" href="style/login.css">
+<?php include 'header.php'; ?>
+<?php include 'nav.php'; ?>
+<body>
 <h1>Login</h1>
 <form action="" method="post">
     <table>
@@ -45,3 +47,5 @@ if (!empty($_POST['login']) && !empty($_POST['pass'])) {
         </tr>
     </table>
 </form>
+</body>
+<?php include 'footer.php'; ?>

@@ -40,7 +40,7 @@ if (!empty($_POST['login']) && !empty($_POST['pass'])) {
 <head>
     <meta charset="UTF-8">
     <title>Registreerimine</title>
-    <link rel="stylesheet" href="style/login.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <h1>Registreerimine</h1>
