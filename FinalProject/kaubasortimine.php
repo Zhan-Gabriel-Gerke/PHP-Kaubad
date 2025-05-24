@@ -129,7 +129,7 @@ if (isset($_GET['muudaid'])) {
     <?php endif; ?>
 
     <h2>Broneeringute tabel</h2>
-    <table border="1" cellpadding="5" cellspacing="0" style="width: 100%; border-collapse: collapse; text-align: center;">
+    <table <!--border="1" cellpadding="5" cellspacing="0" style="width: 100%; border-collapse: collapse; text-align: center;"-->>
         <tr>
             <th>ID</th>
             <th>Kliendi nimi</th>
@@ -137,8 +137,11 @@ if (isset($_GET['muudaid'])) {
             <th>Kellaaeg</th>
             <th>Inimeste arv</th>
             <th>Laua number</th>
-            <th>Toimingud</th>
+            <?php if (isAdmin()): ?>
+                <th>Toimingud</th>
+            <?php endif; ?>
         </tr>
+
 
         <?php if (count($broneeringud) === 0): ?>
             <tr><td colspan="7">Broneeringuid ei leitud</td></tr>
@@ -151,12 +154,13 @@ if (isset($_GET['muudaid'])) {
                     <td><?= $broneering['kellaaeg'] ?></td>
                     <td><?= $broneering['inimiste_arv'] ?></td>
                     <td><?= $broneering['laud_id'] ?></td>
-                    <td>
-                        <a href="kaubasortimine.php?muudaid=<?= $broneering['broneering_id'] ?>">Muuda</a>
-                        <?php if (isAdmin()): ?> |
+                    <?php if (isAdmin()): ?>
+                        <td>
+                            <a href="kaubasortimine.php?muudaid=<?= $broneering['broneering_id'] ?>">Muuda</a>
+                            |
                             <a href="kaubasortimine.php?kustutusid=<?= $broneering['broneering_id'] ?>" onclick="return confirm('Kas soovid kustutada?')">Kustuta</a>
-                        <?php endif; ?>
-                    </td>
+                        </td>
+                    <?php endif; ?>
                 </tr>
             <?php endforeach; ?>
         <?php endif; ?>

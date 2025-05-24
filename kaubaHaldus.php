@@ -89,7 +89,9 @@ $kaubad = kysiKaupadeAndmed();
     <h2>Kaupade loetelu</h2>
     <table>
         <tr>
-            <th>Haldus</th>
+            <?php if (isAdmin()): ?>
+                <th>Haldus</th>
+            <?php endif; ?>
             <th>Nimetus</th>
             <th>Kaubagrupp</th>
             <th>Hind</th>
@@ -99,11 +101,13 @@ $kaubad = kysiKaupadeAndmed();
             <tr>
                 <?php if (isset($_GET["muutmisid"]) && intval($_GET["muutmisid"]) == $kaup->id): ?>
                     <form action="kaubaHaldus.php" method="post">
-                        <td>
-                            <input type="submit" name="muutmine" value="Muuda" />
-                            <a href="kaubaHaldus.php">Katkesta</a>
-                            <input type="hidden" name="muudetudid" value="<?= $kaup->id ?>" />
-                        </td>
+                        <?php if (isAdmin()): ?>
+                            <td>
+                                <input type="submit" name="muutmine" value="Muuda" />
+                                <a href="kaubaHaldus.php">Katkesta</a>
+                                <input type="hidden" name="muudetudid" value="<?= $kaup->id ?>" />
+                            </td>
+                        <?php endif; ?>
                         <td>
                             <input type="text" name="nimetus" value="<?= htmlspecialchars($kaup->nimetus) ?>" required />
                         </td>
@@ -127,8 +131,6 @@ $kaubad = kysiKaupadeAndmed();
                                onclick="return confirm('Kas ikka soovid kustutada?')">x</a>
                             <a href="kaubaHaldus.php?muutmisid=<?= $kaup->id ?>">m</a>
                         </td>
-                    <?php else: ?>
-                        <td></td>
                     <?php endif; ?>
                     <td><?= htmlspecialchars($kaup->nimetus) ?></td>
                     <td><?= htmlspecialchars($kaup->grupinimi) ?></td>
@@ -136,6 +138,7 @@ $kaubad = kysiKaupadeAndmed();
                 <?php endif; ?>
             </tr>
         <?php endforeach; ?>
+
 
     </table>
 
