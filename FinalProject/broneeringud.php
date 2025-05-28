@@ -11,7 +11,7 @@ if (isset($_POST["broneeringuLisamine"])) {
 
 $broneeringud = kysiBroneeringud();
 ?>
-
+<!-- Страница создания брони для обычного юзера-->
 <!DOCTYPE html>
 <html lang="et">
 <?php include 'header.php'; ?>

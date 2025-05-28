@@ -1,17 +1,20 @@
 <?php
 session_start();
+
 require("SRVconf.php");
 require("abifunktsioonid.php");
 
+// проверяем авторизацию
 if (!isset($_SESSION['kasutaja'])) {
     header('Location: login2.php');
     exit();
 }
-
+//проверяет админ или нет
 function isAdmin() {
     return isset($_SESSION['admin']) && $_SESSION['admin'];
 }
 
+// функция для получения данных одной брони по ID
 function kysiBroneeringId($id) {
     global $yhendus;
     $paring = $yhendus->prepare("
@@ -27,6 +30,7 @@ function kysiBroneeringId($id) {
     return $rida;
 }
 
+// функция для обновления брони по ID
 function muudaBroneering($id, $kliendi_nimi, $laud_id, $kuupaev, $kellaaeg, $inimiste_arv) {
     global $yhendus;
     $paring = $yhendus->prepare("
@@ -34,11 +38,13 @@ function muudaBroneering($id, $kliendi_nimi, $laud_id, $kuupaev, $kellaaeg, $ini
         SET kliendi_nimi=?, laud_id=?, kuupaev=?, kellaaeg=?, inimiste_arv=? 
         WHERE broneering_id=?
     ");
+    // привязываем параметры в нужном порядке
     $paring->bind_param('sissii', $kliendi_nimi, $laud_id, $kuupaev, $kellaaeg, $inimiste_arv, $id);
     $paring->execute();
     $paring->close();
 }
 
+// обработка отправки формы для сохранения изменений брони
 if (isset($_POST['salvesta_muudatused']) && isset($_POST['broneering_id'])) {
     muudaBroneering(
         $_POST['broneering_id'],
@@ -52,13 +58,14 @@ if (isset($_POST['salvesta_muudatused']) && isset($_POST['broneering_id'])) {
     exit();
 }
 
+// удаление только для адм работает
 if (isset($_GET["kustutusid"]) && isAdmin()) {
     kustutaBroneering($_GET["kustutusid"]);
     header("Location: kaubasortimine.php");
     exit();
 }
 
-// Поиск по имени или дате
+// Поиск бронирований по имени клиента или дате
 $otsing = "";
 $broneeringud = [];
 
@@ -79,7 +86,7 @@ if (isset($_GET['otsi'])) {
     }
     $paring->close();
 } else {
-    $broneeringud = kysiBroneeringud();
+    $broneeringud = kysiBroneeringud(); // Получаем все брони
 }
 
 $muudetavBroneering = null;
@@ -95,7 +102,7 @@ if (isset($_GET['muudaid'])) {
     <p>Tere, <?= htmlspecialchars($_SESSION['kasutaja']) ?>!</p>
     <h1>Restorani broneeringute haldus</h1>
 
-    <!-- Форма поиска -->
+    <!-- форма поиска -->
     <form action="kaubasortimine.php" method="get" style="margin-bottom: 30px;">
         <h2>Otsi broneeringuid</h2>
         <input type="text" name="otsi" placeholder="Kliendi nimi või kuupäev (YYYY-MM-DD)" value="<?= htmlspecialchars($otsing) ?>" />
@@ -104,6 +111,7 @@ if (isset($_GET['muudaid'])) {
     </form>
 
     <?php if ($muudetavBroneering): ?>
+        <!-- форма редактирования брони -->
         <form action="kaubasortimine.php" method="post" style="margin-bottom: 30px;">
             <h2>Muuda broneeringut (ID: <?= $muudetavBroneering['broneering_id'] ?>)</h2>
             <input type="hidden" name="broneering_id" value="<?= $muudetavBroneering['broneering_id'] ?>" />
@@ -122,6 +130,7 @@ if (isset($_GET['muudaid'])) {
 
             <label>Vali laud (istekohtade arv):</label>
             <?= looLaudRippMenyy("SELECT laud_id, istekohtade_arv FROM laud", "laud_id", $muudetavBroneering['laud_id']) ?>
+            <!-- создание выпадающего меню -->
 
             <input type="submit" name="salvesta_muudatused" value="Salvesta muudatused" />
             <a href="kaubasortimine.php" style="margin-left:15px;">Katkesta</a>
@@ -129,7 +138,7 @@ if (isset($_GET['muudaid'])) {
     <?php endif; ?>
 
     <h2>Broneeringute tabel</h2>
-    <table <!--border="1" cellpadding="5" cellspacing="0" style="width: 100%; border-collapse: collapse; text-align: center;"-->>
+    <table>
         <tr>
             <th>ID</th>
             <th>Kliendi nimi</th>
@@ -141,7 +150,6 @@ if (isset($_GET['muudaid'])) {
                 <th>Toimingud</th>
             <?php endif; ?>
         </tr>
-
 
         <?php if (count($broneeringud) === 0): ?>
             <tr><td colspan="7">Broneeringuid ei leitud</td></tr>
@@ -156,6 +164,7 @@ if (isset($_GET['muudaid'])) {
                     <td><?= $broneering['laud_id'] ?></td>
                     <?php if (isAdmin()): ?>
                         <td>
+                            <!-- кнопки на ред -->
                             <a href="kaubasortimine.php?muudaid=<?= $broneering['broneering_id'] ?>">Muuda</a>
                             |
                             <a href="kaubasortimine.php?kustutusid=<?= $broneering['broneering_id'] ?>" onclick="return confirm('Kas soovid kustutada?')">Kustuta</a>
