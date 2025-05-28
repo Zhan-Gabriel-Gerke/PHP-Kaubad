@@ -12,7 +12,7 @@ function isAdmin() {
     return isset($_SESSION['admin']) && $_SESSION['admin'];
 }
 
-// Функция для получения одной брони по ID
+//получение брони по ID
 function kysiBroneeringId($id) {
     global $yhendus;
     $paring = $yhendus->prepare("SELECT broneering_id, kliendi_nimi, laud_id, kuupaev, kellaaeg, inimiste_arv FROM broneering WHERE broneering_id = ?");
@@ -24,7 +24,7 @@ function kysiBroneeringId($id) {
     return $rida;
 }
 
-// Функция для обновления брони
+// Функция для обновление брони
 function muudaBroneering($id, $kliendi_nimi, $laud_id, $kuupaev, $kellaaeg, $inimiste_arv) {
     global $yhendus;
     $paring = $yhendus->prepare("UPDATE broneering SET kliendi_nimi=?, laud_id=?, kuupaev=?, kellaaeg=?, inimiste_arv=? WHERE broneering_id=?");
@@ -60,7 +60,7 @@ if (isset($_POST['salvesta_muudatused']) && isset($_POST['broneering_id'])) {
     exit();
 }
 
-// Удаление резервации — только для админа
+// Удаление резервации
 if (isset($_GET["kustutusid"]) && isAdmin()) {
     kustutaBroneering($_GET["kustutusid"]);
     header("Location: kaubaHaldus.php");
@@ -70,7 +70,6 @@ if (isset($_GET["kustutusid"]) && isAdmin()) {
 // Получаем все брони
 $broneeringud = kysiBroneeringud();
 
-// Если есть параметр muudaid — получаем одну бронь для редактирования
 $muudetavBroneering = null;
 if (isset($_GET['muudaid'])) {
     $muudetavBroneering = kysiBroneeringId($_GET['muudaid']);
@@ -136,7 +135,7 @@ if (isset($_GET['muudaid'])) {
             <th>Kuupäev</th>
             <th>Kellaaeg</th>
             <th>Inimeste arv</th>
-            <th>Laua number</th> <!-- изменено -->
+            <th>Laua number</th>
             <th>Toimingud</th>
         </tr>
         <?php foreach ($broneeringud as $broneering): ?>
@@ -146,7 +145,7 @@ if (isset($_GET['muudaid'])) {
                 <td><?= $broneering['kuupaev'] ?></td>
                 <td><?= $broneering['kellaaeg'] ?></td>
                 <td><?= $broneering['inimiste_arv'] ?></td>
-                <td><?= $broneering['laud_id'] ?></td> <!-- изменено -->
+                <td><?= $broneering['laud_id'] ?></td>
                 <td>
                     <a href="kaubaHaldus.php?muudaid=<?= $broneering['broneering_id'] ?>">Muuda</a> |
                     <?php if (isAdmin()): ?>
