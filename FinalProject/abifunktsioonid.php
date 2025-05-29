@@ -29,7 +29,7 @@ function lisaBroneering($nimi, $laud_id, $kuupaev, $kellaaeg, $inimeste_arv) {
 // функция для получения всех бронирований
 function kysiBroneeringud() {
     global $yhendus;
-    $kask = "SELECT broneering_id, kliendi_nimi, laud_id, kuupaev, kellaaeg, inimiste_arv FROM broneering";
+    $kask = "SELECT broneering_id, kliendi_nimi, laud_id, kuupaev, kellaaeg, inimiste_arv FROM broneering ORDER BY kuupaev DESC, kellaaeg DESC";
     $tulemus = $yhendus->query($kask);
     return $tulemus->fetch_all(MYSQLI_ASSOC);
 }

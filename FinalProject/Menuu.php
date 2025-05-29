@@ -10,9 +10,8 @@ $tulemus = $paring->get_result();
 ?>
 <?php include 'header.php'; ?>
 <?php include 'nav.php'; ?>
-<body>
 <h1>Restorani Menüü</h1>
-<table border="1" cellpadding="5">
+<table>
     <tr>
         <th>Toidu nimetus</th>
         <th>Hind (€)</th>
@@ -26,7 +25,4 @@ $tulemus = $paring->get_result();
         </tr>
     <?php endwhile; ?>
 </table>
-
-</body>
 <?php include 'footer.php'; ?>
-</html>

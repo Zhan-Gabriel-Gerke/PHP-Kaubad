@@ -8,15 +8,11 @@ if (isset($_POST["broneeringuLisamine"])) {
     header("Location: broneeringud.php");
     exit();
 }
-
 $broneeringud = kysiBroneeringud();
 ?>
 <!-- Страница создания брони для обычного юзера-->
-<!DOCTYPE html>
-<html lang="et">
 <?php include 'header.php'; ?>
 <?php include 'nav.php'; ?>
-<body>
 <h1>Restorani broneeringud</h1>
 <form action="broneeringud.php" method="post">
     <h2>Uue broneeringu lisamine</h2>
@@ -32,6 +28,4 @@ $broneeringud = kysiBroneeringud();
     <?= looRippMenyy("SELECT laud_id, CONCAT('Laud #', laud_id, ' (', istekohtade_arv, ' kohta)') as nimetus FROM laud", "laud_id") ?>
     <input type="submit" name="broneeringuLisamine" value="Lisa broneering" />
 </form>
-</body>
 <?php include 'footer.php'; ?>
-</html>

@@ -21,6 +21,7 @@ function kysiBroneeringId($id) {
         SELECT broneering_id, kliendi_nimi, laud_id, kuupaev, kellaaeg, inimiste_arv
         FROM broneering
         WHERE broneering_id = ?
+        ORDER BY kuupaev DESC, kellaaeg DESC
     ");
     $paring->bind_param('i', $id);
     $paring->execute();
@@ -73,10 +74,11 @@ if (isset($_GET['otsi'])) {
     $otsing = trim($_GET['otsi']);
     global $yhendus;
     $paring = $yhendus->prepare("
-        SELECT * FROM broneering 
+        SELECT * 
+        FROM broneering 
         WHERE kliendi_nimi LIKE CONCAT('%', ?, '%') 
-        OR kuupaev = ?
-        ORDER BY kuupaev DESC, kellaaeg ASC
+           OR kuupaev = ?
+        ORDER BY kuupaev DESC;
     ");
     $paring->bind_param('ss', $otsing, $otsing);
     $paring->execute();
@@ -104,10 +106,9 @@ if (isset($_GET['muudaid'])) {
 
     <!-- форма поиска -->
     <form action="adminPanel.php" method="get" style="margin-bottom: 30px;">
-        <h2>Otsi broneeringuid</h2>
         <input type="text" name="otsi" placeholder="Kliendi nimi või kuupäev (YYYY-MM-DD)" value="<?= htmlspecialchars($otsing) ?>" />
         <input type="submit" value="Otsi" />
-        <a href="adminPanel.php" style="margin-left: 15px;">Näita kõiki</a>
+        <a href="adminPanel.php" class="button-like">Näita kõiki</a>
     </form>
     <?php if ($muudetavBroneering): ?>
         <!-- форма редактирования брони -->
@@ -135,8 +136,6 @@ if (isset($_GET['muudaid'])) {
             <a href="adminPanel.php" style="margin-left:15px;">Katkesta</a>
         </form>
     <?php endif; ?>
-
-    <h2>Broneeringute tabel</h2>
     <table>
         <tr>
             <th>ID</th>
@@ -175,7 +174,6 @@ if (isset($_GET['muudaid'])) {
 
     </table>
 <?php endif; ?>
-
-</body>
 <?php include 'footer.php'; ?>
+</body>
 </html>
