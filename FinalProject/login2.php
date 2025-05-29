@@ -18,7 +18,7 @@ if (!empty($_POST['login']) && !empty($_POST['pass'])) {
         $_SESSION['admin'] = ($onadmin == 1);
         $paring->close();
         $yhendus->close();
-        header('Location: kaubasortimine.php');
+        header('Location: adminPanel.php');
         exit();
     } else {
         echo "Kasutajanimi või parool on vale.";

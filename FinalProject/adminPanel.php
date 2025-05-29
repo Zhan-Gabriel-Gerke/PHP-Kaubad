@@ -54,14 +54,14 @@ if (isset($_POST['salvesta_muudatused']) && isset($_POST['broneering_id'])) {
         $_POST["kellaaeg"],
         $_POST["inimiste_arv"]
     );
-    header("Location: kaubasortimine.php");
+    header("Location: adminPanel.php");
     exit();
 }
 
 // удаление только для адм работает
 if (isset($_GET["kustutusid"]) && isAdmin()) {
     kustutaBroneering($_GET["kustutusid"]);
-    header("Location: kaubasortimine.php");
+    header("Location: adminPanel.php");
     exit();
 }
 
@@ -103,16 +103,15 @@ if (isset($_GET['muudaid'])) {
     <h1>Restorani broneeringute haldus</h1>
 
     <!-- форма поиска -->
-    <form action="kaubasortimine.php" method="get" style="margin-bottom: 30px;">
+    <form action="adminPanel.php" method="get" style="margin-bottom: 30px;">
         <h2>Otsi broneeringuid</h2>
         <input type="text" name="otsi" placeholder="Kliendi nimi või kuupäev (YYYY-MM-DD)" value="<?= htmlspecialchars($otsing) ?>" />
         <input type="submit" value="Otsi" />
-        <a href="kaubasortimine.php" style="margin-left: 15px;">Näita kõiki</a>
+        <a href="adminPanel.php" style="margin-left: 15px;">Näita kõiki</a>
     </form>
-
     <?php if ($muudetavBroneering): ?>
         <!-- форма редактирования брони -->
-        <form action="kaubasortimine.php" method="post" style="margin-bottom: 30px;">
+        <form action="adminPanel.php" method="post" style="margin-bottom: 30px;">
             <h2>Muuda broneeringut (ID: <?= $muudetavBroneering['broneering_id'] ?>)</h2>
             <input type="hidden" name="broneering_id" value="<?= $muudetavBroneering['broneering_id'] ?>" />
 
@@ -133,7 +132,7 @@ if (isset($_GET['muudaid'])) {
             <!-- создание выпадающего меню -->
 
             <input type="submit" name="salvesta_muudatused" value="Salvesta muudatused" />
-            <a href="kaubasortimine.php" style="margin-left:15px;">Katkesta</a>
+            <a href="adminPanel.php" style="margin-left:15px;">Katkesta</a>
         </form>
     <?php endif; ?>
 
@@ -165,9 +164,9 @@ if (isset($_GET['muudaid'])) {
                     <?php if (isAdmin()): ?>
                         <td>
                             <!-- кнопки на ред -->
-                            <a href="kaubasortimine.php?muudaid=<?= $broneering['broneering_id'] ?>">Muuda</a>
+                            <a href="adminPanel.php?muudaid=<?= $broneering['broneering_id'] ?>">Muuda</a>
                             |
-                            <a href="kaubasortimine.php?kustutusid=<?= $broneering['broneering_id'] ?>" onclick="return confirm('Kas soovid kustutada?')">Kustuta</a>
+                            <a href="adminPanel.php?kustutusid=<?= $broneering['broneering_id'] ?>" onclick="return confirm('Kas soovid kustutada?')">Kustuta</a>
                         </td>
                     <?php endif; ?>
                 </tr>
