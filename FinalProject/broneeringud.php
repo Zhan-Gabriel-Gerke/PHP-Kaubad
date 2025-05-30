@@ -5,7 +5,7 @@ require("abifunktsioonid.php");
 // Добавление новой брони
 if (isset($_POST["broneeringuLisamine"])) {
     lisaBroneering($_POST["kliendi_nimi"], $_POST["laud_id"], $_POST["kuupaev"], $_POST["kellaaeg"], $_POST["inimeste_arv"]);
-    header("Location: broneeringud.php");
+    header("Location: broneeringud.php?success=1"); // добавляем параметр
     exit();
 }
 $broneeringud = kysiBroneeringud();
@@ -13,6 +13,9 @@ $broneeringud = kysiBroneeringud();
 <!-- Страница создания брони для обычного юзера-->
 <?php include 'header.php'; ?>
 <?php include 'nav.php'; ?>
+<?php if (isset($_GET['success']) && $_GET['success'] == 1): ?>
+    <div class="success-message">Broneering on edukalt lisatud!</div>
+<?php endif; ?>
 <h1>Restorani broneeringud</h1>
 <form action="broneeringud.php" method="post">
     <h2>Uue broneeringu lisamine</h2>

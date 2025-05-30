@@ -1,5 +1,5 @@
 <footer>
     <hr>
-    <p>© 2025</p>
+    <p>Zhan-Gabriel Gerke © 2025</p>
 </footer>
 </html>
